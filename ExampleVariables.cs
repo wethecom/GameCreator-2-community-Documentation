@@ -16,33 +16,35 @@ using UnityEngine;
 [Serializable]
 public class ExampleVariables : Instruction
 {
-    [SerializeField] private LocalNameVariables m_Set;
-    [SerializeField] private GlobalNameVariables m_Set2;
-    [SerializeField] private PropertyGetRotation m_Direction = new PropertyGetRotation();
-    [SerializeField] private ForceMode m_ForceMode = ForceMode.Impulse;
-    [SerializeField] private PropertySetWeapon m_To = SetWeaponNone.Create;
-    [SerializeField] private PropertyGetWeapon m_Weapon = new PropertyGetWeapon();
-    [SerializeField] private PropertyGetGameObject m_TransformA = new PropertyGetGameObject();
+    [SerializeField] private LocalNameVariables localVariables;
+    [SerializeField] private GlobalNameVariables globalVariables;
+    [SerializeField] private PropertyGetRotation direction = new PropertyGetRotation();
+    [SerializeField] private ForceMode forceMode = ForceMode.Impulse;
+    [SerializeField] private PropertySetWeapon setWeapon = SetWeaponNone.Create;
+    [SerializeField] private PropertyGetWeapon weapon = new PropertyGetWeapon();
+    [SerializeField] private PropertyGetGameObject gameObjectA = new PropertyGetGameObject();
 
-    [SerializeField] private string m_VariableName = "distance";
-    [SerializeField] private LocalNameVariables m_LocalVariable; // Reference to a Variable
+    [SerializeField] private string distanceVariableName = "distance";
+    [SerializeField] private LocalNameVariables localDistanceVariable;
+
     protected override Task Run(Args args)
     {
         // Retrieve different types of variables from local scope
-        GameObject gO = (GameObject)m_Set.Get("localGameObject");
-        Vector3 v3 = (Vector3)m_Set.Get("localPosition");
-        bool Bool = (bool)m_Set.Get("localFlag");
+        GameObject localGameObject = (GameObject)localVariables.Get("localGameObject");
+        Vector3 localPosition = (Vector3)localVariables.Get("localPosition");
+        bool localFlag = (bool)localVariables.Get("localFlag");
 
         // Retrieve different types of variables from global scope
-        GameObject gO2 = (GameObject)m_Set2.Get("globalGameObject");
-        Vector3 v32 = (Vector3)m_Set2.Get("globalPosition");
-        bool Bool2 = (bool)m_Set2.Get("globalFlag");
+        GameObject globalGameObject = (GameObject)globalVariables.Get("globalGameObject");
+        Vector3 globalPosition = (Vector3)globalVariables.Get("globalPosition");
+        bool globalFlag = (bool)globalVariables.Get("globalFlag");
 
-        IWeapon weapon = this.m_Weapon.Get(args);
-        if (weapon == null) return DefaultResult;
-        this.m_To.Set(weapon, args);
-        Transform transformA = m_TransformA.Get(args)?.transform;
-        m_LocalVariable.Set(m_VariableName.ToString(), 1f);
+        IWeapon currentWeapon = weapon.Get(args);
+        if (currentWeapon == null) return DefaultResult;
+        setWeapon.Set(currentWeapon, args);
+
+        Transform transformA = gameObjectA.Get(args)?.transform;
+        localDistanceVariable.Set(distanceVariableName, 1f);
 
         // Your code here...
         // Example: You can use these variables to control game logic, manipulate objects, etc.
