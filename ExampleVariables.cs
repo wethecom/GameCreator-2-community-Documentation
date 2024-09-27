@@ -16,6 +16,9 @@ using UnityEngine;
 [Serializable]
 public class ExampleVariables : Instruction
 {
+    [SerializeField] private TimeMode m_TimeMode = new TimeMode(TimeMode.UpdateMode.GameTime);
+    [SerializeField] private PropertyGetDecimal m_Interval = new PropertyGetDecimal(1f);
+    
     [SerializeField] private LocalNameVariables localVariables;
     [SerializeField] private GlobalNameVariables globalVariables;
     [SerializeField] private PropertyGetRotation direction = new PropertyGetRotation();
@@ -29,6 +32,9 @@ public class ExampleVariables : Instruction
 
     protected override Task Run(Args args)
     {
+ private double m_NextInterval = double.MinValue;
+
+     this.m_NextInterval = this.m_TimeMode.Time + this.m_Interval.Get(args);
         // Retrieve different types of variables from local scope
         GameObject localGameObject = (GameObject)localVariables.Get("localGameObject");
         Vector3 localPosition = (Vector3)localVariables.Get("localPosition");
